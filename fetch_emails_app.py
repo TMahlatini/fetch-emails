@@ -8,12 +8,10 @@ from googleapiclient.discovery import build
 import json
 
 # Decode the credentials.json
-credentials_base64 = os.getenv('GMAIL_CREDENTIALS')
-if credentials_base64 is None:
-    raise ValueError("GMAIL_CREDENTIALS environment variable is not set")
-
+credentials_base64 = os.getenv('CREDENTIALS_JSON_BASE64')
 credentials_json = base64.b64decode(credentials_base64).decode('utf-8')
 credentials = json.loads(credentials_json)
+
 
 # Decode the token.json
 token_base64 = os.getenv('TOKEN_JSON_BASE64')
