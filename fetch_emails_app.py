@@ -1,10 +1,31 @@
 from flask import Flask, jsonify
-import os.path
+import os
 import base64
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
+import json
+
+# Decode the credentials.json
+credentials_base64 = os.getenv('GMAIL_CREDENTIALS')
+if credentials_base64 is None:
+    raise ValueError("GMAIL_CREDENTIALS environment variable is not set")
+
+credentials_json = base64.b64decode(credentials_base64).decode('utf-8')
+credentials = json.loads(credentials_json)
+
+# Decode the token.json
+token_base64 = os.getenv('TOKEN_JSON_BASE64')
+token_json = base64.b64decode(token_base64).decode('utf-8')
+token = json.loads(token_json)
+
+with open('credentials.json', 'w') as f:
+    json.dump(credentials, f)
+
+with open('token.json', 'w') as f:
+    json.dump(token, f)
+
 
 app = Flask(__name__)
 
