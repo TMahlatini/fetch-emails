@@ -11,32 +11,40 @@ app = Flask(__name__)
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 
-def load_credentials_from_env():
+def load_credentials_from_env(development=False):
     """
     Load credentials.json and token.json from environment variables (stored as base64)
     and save them to temporary files.
     """
     # Decode and save credentials.json from environment
-    credentials_base64 = os.getenv('CREDENTIALS_JSON_BASE64')
-    credentials_json = base64.b64decode(credentials_base64).decode('utf-8')
+    if not development:  
+        credentials_base64 = os.getenv('CREDENTIALS_JSON_BASE64')
+        credentials_json = base64.b64decode(credentials_base64).decode('utf-8')
     
-    with open('credentials.json', 'w') as f:
-        f.write(credentials_json)
+        with open('credentials.json', 'w') as f:
+            f.write(credentials_json)
+   
 
     # Decode and save token.json from environment
-    token_base64 = os.getenv('TOKEN_JSON_BASE64')
-    token_json = base64.b64decode(token_base64).decode('utf-8')
+    if not development:
+        token_base64 = os.getenv('TOKEN_JSON_BASE64')
+        token_json = base64.b64decode(token_base64).decode('utf-8')
     
-    with open('token.json', 'w') as f:
-        f.write(token_json)
+        with open('token.json', 'w') as f:
+            f.write(token_json)
 
-def update_token_in_env(token_json):
+    
+
+
+def update_token_in_env(token_json, development=False):
     """
     Update the token.json in the environment variable after refreshing the token.
     """
-    token_base64 = base64.b64encode(token_json.encode('utf-8')).decode('utf-8')
-    # Update Heroku environment variable with new token.json
-    os.system(f"heroku config:set TOKEN_JSON_BASE64={token_base64}")
+    if not development:
+        token_base64 = base64.b64encode(token_json.encode('utf-8')).decode('utf-8')
+        # Update Heroku environment variable with new token.json
+        os.system(f"heroku config:set TOKEN_JSON_BASE64={token_base64}")
+
 
 def authenticate_gmail():
     """
@@ -107,4 +115,4 @@ def fetch_emails():
     return jsonify(email_data)
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(port=5001, debug=True)
