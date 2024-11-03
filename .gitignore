@@ -1,7 +1,7 @@
 credentials.json
 token.json
 
-.venv
+.venv/*
 token_base64.txt
 credentials_base64.txt
 notes.md

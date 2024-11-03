@@ -26,11 +26,11 @@ def load_credentials_from_env():
             logging.error("Environment variables for credentials are missing.")
             return False
 
-        with open('credentials.json', 'w') as f:
-            f.write(base64.b64decode(credentials_base64).decode('utf-8'))
+        with open('credentials.json', 'wb') as f:
+            f.write(base64.b64decode(credentials_base64))
 
-        with open('token.json', 'w') as f:
-            f.write(base64.b64decode(token_base64).decode('utf-8'))
+        with open('token.json', 'wb') as f:
+            f.write(base64.b64decode(token_base64))
     return True
 
 def update_token_in_env(token_json):
