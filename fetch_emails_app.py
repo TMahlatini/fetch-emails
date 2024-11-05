@@ -13,7 +13,7 @@ app = Flask(__name__)
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 
-SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
+SCOPES = ['https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.modify']
 DEVELOPMENT = os.getenv('DEVELOPMENT', 'True').lower() == 'true'
 
 def load_credentials_from_env():
@@ -81,6 +81,8 @@ def fetch_emails():
         return jsonify({"error": "Failed to authenticate Gmail service."}), 500
 
     query = request.args.get('query', 'to:rides@whitman.edu')
+    base_query = request.args.get('query', 'to:rides@whitman.edu')
+    query = f"{base_query} is:unread"
     results = service.users().messages().list(userId='me', q=query).execute()
     messages = results.get('messages', [])
     
@@ -111,6 +113,14 @@ def fetch_emails():
             'sender': sender,
             'date': date
         })
+    
+ 
+    for message in messages:
+        service.users().messages().modify(
+            userId='me',
+            id=message['id'],
+            body={'removeLabelIds': ['UNREAD']}
+        ).execute()
     
     print(jsonify(email_data))
     return jsonify(email_data)
