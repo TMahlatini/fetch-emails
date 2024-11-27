@@ -82,8 +82,7 @@ def fetch_emails():
 
     query = request.args.get('query', 'to:rides@whitman.edu')
     base_query = request.args.get('query', 'to:rides@whitman.edu')
-    #query = f"{base_query} is:unread" # TODO: add query to filter by date
-    query = f"{base_query} after:2024/11/10"
+    query = f"{base_query} is:unread"
     results = service.users().messages().list(userId='me', q=query).execute()
     messages = results.get('messages', [])
     
