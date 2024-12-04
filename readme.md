@@ -62,7 +62,7 @@ The server will start on port 5002 by default.
 ### API Endpoints
 
 #### GET /fetch-emails
-Fetches emails based on the specified query.
+Fetches emails based on the specified query. If no query is provided, the default query is `is:unread`.
 
 Query Parameters:
 - `query` 
@@ -70,6 +70,7 @@ Query Parameters:
 Example Request:
 ```bash
 curl "http://localhost:5002/fetch-emails?query=from:example@email.com"
+curl "http://localhost:5002/fetch-emails" # default query is "is:unread"
 ```
 
 Response Format:

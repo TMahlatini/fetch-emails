@@ -80,9 +80,10 @@ def fetch_emails():
     if service is None:
         return jsonify({"error": "Failed to authenticate Gmail service."}), 500
 
-    query = request.args.get('query', 'to:rides@whitman.edu')
-    base_query = request.args.get('query', 'to:rides@whitman.edu')
-    query = f"{base_query} is:unread"
+    if request.args.get('query'):
+        query = request.args.get('query')
+    else:
+        query = 'is:unread'
     results = service.users().messages().list(userId='me', q=query).execute()
     messages = results.get('messages', [])
     
